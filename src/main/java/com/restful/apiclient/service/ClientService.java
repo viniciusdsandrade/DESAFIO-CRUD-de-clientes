@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface ClientService {
+    
     /*
     1 - Busca paginada de recursos
     2 - Busca de recurso por id

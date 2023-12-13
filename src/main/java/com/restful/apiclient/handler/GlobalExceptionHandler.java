@@ -1,6 +1,7 @@
 package com.restful.apiclient.handler;
 
 import com.restful.apiclient.exception.ResourceNotFoundException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -33,8 +34,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ResponseEntity contendo detalhes do erro e status HTTP 404 (Not Found).
      */
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleException(ResourceNotFoundException exception,
-                                                        WebRequest webRequest) {
+    public ResponseEntity<ErrorDetails> handleException(@NotNull ResourceNotFoundException exception,
+                                                        @NotNull WebRequest webRequest) {
 
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
@@ -54,8 +55,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ResponseEntity contendo detalhes do erro e status HTTP 500 (Internal Server Error).
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception,
-                                                              WebRequest webRequest) {
+    public ResponseEntity<ErrorDetails> handleGlobalException(@NotNull Exception exception,
+                                                              @NotNull WebRequest webRequest) {
 
         ErrorDetails errorDetails = new ErrorDetails(
                 LocalDateTime.now(),
@@ -76,7 +77,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @return ResponseEntity contendo detalhes dos erros de validação e status HTTP 400 (Bad Request).
      */
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(@NotNull MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatusCode status,
                                                                   WebRequest request) {

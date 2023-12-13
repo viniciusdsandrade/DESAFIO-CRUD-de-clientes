@@ -49,10 +49,10 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClientDTO save(ClientDTO clientDTO) {
-
-        if (clientRepository.existsByCPF(clientDTO.getCPF()))
-            throw new CpfAlreadyExistsException("CPF already exists: " + clientDTO.getCPF());
-
+        
+        if (clientRepository.existsByCpf(clientDTO.getCpf())) 
+            throw new CpfAlreadyExistsException(clientDTO.getCpf());
+        
         Client client = ClientMapper.mapToClient(clientDTO);
         Client savedClient = clientRepository.save(client);
 
@@ -67,7 +67,7 @@ public class ClientServiceImpl implements ClientService {
                 .orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
 
         clientToUpdate.setName(clientDTO.getName());
-        clientToUpdate.setCPF(clientDTO.getCPF());
+        clientToUpdate.setCpf(clientDTO.getCpf());
         clientToUpdate.setIncome(clientDTO.getIncome());
         clientToUpdate.setBirthDate(clientDTO.getBirthDate());
         clientToUpdate.setChildren(clientDTO.getChildren());

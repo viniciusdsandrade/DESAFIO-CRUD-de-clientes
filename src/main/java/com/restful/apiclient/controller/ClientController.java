@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/clients")
@@ -25,17 +26,13 @@ public class ClientController {
     public ResponseEntity<ClientDTO> save(@Valid @RequestBody ClientDTO dto) {
 
         ClientDTO clientDTOSaved = clientService.save(dto);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(clientDTOSaved.getId())
-                .toUri();
+        URI location = createLocationUri(clientDTOSaved.getId());
 
-        return ResponseEntity.created(uri).body(dto);
+        return ResponseEntity.created(location).body(clientDTOSaved);
     }
-    
+
     @GetMapping
-    public ResponseEntity<java.util.List<ClientDTO>> findAll(Pageable pageable) {
+    public ResponseEntity<List<ClientDTO>> findAll(Pageable pageable) {
         return ResponseEntity.ok(clientService.findAll(pageable));
     }
 
@@ -53,5 +50,13 @@ public class ClientController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         clientService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private URI createLocationUri(Long id) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
     }
 }

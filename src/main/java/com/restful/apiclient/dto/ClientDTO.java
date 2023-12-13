@@ -1,10 +1,7 @@
 package com.restful.apiclient.dto;
 
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.NegativeOrZero;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,20 +23,22 @@ public class ClientDTO {
 
     @NotBlank(message = "O CPF não pode ser vazio.")
     @CPF(message = "O CPF informado não é válido.")
-    private String CPF;
+    private String cpf;
 
-    @NotBlank(message = "A renda não pode ser vazia.")
-    @Column(name = "client_income")
-    @NegativeOrZero(message = "A renda não pode ser negativa.")
+    @NotNull(message = "A renda não pode ser vazia.")
+    @PositiveOrZero(message = "A renda não pode ser negativa.")
+    @Column(columnDefinition = "DECIMAL(10,2)")
     private Double income;
 
-    @NotBlank(message = "A data de nascimento não pode ser vazia.")
+    @NotNull(message = "A data de nascimento não pode ser vazia.")
     @PastOrPresent(message = "A data de nascimento não pode ser futura.")
+    @Column(columnDefinition = "DATE")
     private LocalDate birthDate;
 
-    @NotBlank(message = "O número de filhos não pode ser vazio.")
-    @NegativeOrZero(message = "O número de filhos não pode ser negativo.")
-    private Integer Children;
+    @NotNull(message = "O número de filhos não pode ser vazio.")
+    @PositiveOrZero(message = "O número de filhos não pode ser negativo.")
+    @Column(columnDefinition = "TINYINT UNSIGNED")
+    private Integer children;
 
     @Override
     public boolean equals(Object o) {
@@ -52,10 +51,10 @@ public class ClientDTO {
 
         return Objects.equals(this.id, that.id) &&
                 Objects.equals(this.name, that.name) &&
-                Objects.equals(this.CPF, that.CPF) &&
+                Objects.equals(this.cpf, that.cpf) &&
                 Objects.equals(this.income, that.income) &&
                 Objects.equals(this.birthDate, that.birthDate) &&
-                Objects.equals(this.Children, that.Children);
+                Objects.equals(this.children, that.children);
     }
 
     @Override
@@ -66,10 +65,10 @@ public class ClientDTO {
 
         hash *= prime + (this.getId() == null ? 0 : this.getId().hashCode());
         hash *= prime + (this.getName() == null ? 0 : this.getName().hashCode());
-        hash *= prime + (this.getCPF() == null ? 0 : this.getCPF().hashCode());
+        hash *= prime + (this.getCpf() == null ? 0 : this.getCpf().hashCode());
         hash *= prime + (this.getIncome() == null ? 0 : this.getIncome().hashCode());
         hash *= prime + (this.getBirthDate() == null ? 0 : this.getBirthDate().hashCode());
-        hash *= prime + (this.getChildren() == null ? 0 : this.getChildren().hashCode());
+        hash *= prime + (this.getChildren() == 0 ? 0 : this.getChildren());
 
         if (hash < 0)
             hash *= -1;
@@ -82,9 +81,9 @@ public class ClientDTO {
 
         this.id = clientDTO.id;
         this.name = clientDTO.name;
-        this.CPF = clientDTO.CPF;
+        this.cpf = clientDTO.cpf;
         this.income = clientDTO.income;
         this.birthDate = clientDTO.birthDate;
-        this.Children = clientDTO.Children;
+        this.children = clientDTO.children;
     }
 }

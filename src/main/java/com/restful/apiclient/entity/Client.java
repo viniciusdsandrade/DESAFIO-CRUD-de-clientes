@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -14,7 +15,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Client")
-@Table(name = "tb_client", schema = "db_client")
+@Table(name = "tb_client",
+        schema = "db_client")
 public class Client {
 
     @Id
@@ -25,7 +27,7 @@ public class Client {
     private String name;
 
     @Column(name = "client_cpf")
-    private String CPF;
+    private String cpf;
 
     @Column(name = "client_income")
     private Double income;
@@ -34,7 +36,7 @@ public class Client {
     private LocalDate birthDate;
 
     @Column(name = "client_children")
-    private Integer Children;
+    private Integer children;
 
     @Override
     public boolean equals(Object o) {
@@ -45,26 +47,26 @@ public class Client {
 
         Client that = (Client) o;
 
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(CPF, that.CPF) &&
-                Objects.equals(income, that.income) &&
-                Objects.equals(birthDate, that.birthDate) &&
-                Objects.equals(Children, that.Children);
+        return Objects.equals(this.id, that.id) &&
+                Objects.equals(this.name, that.name) &&
+                Objects.equals(this.cpf, that.cpf) &&
+                Objects.equals(this.income, that.income) &&
+                Objects.equals(this.birthDate, that.birthDate) &&
+                Objects.equals(this.children, that.children);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, CPF, income, birthDate, Children);
+        return Objects.hash(id, name, cpf, income, birthDate, children);
     }
 
     //Construtor de cópia
-    public Client(Client client) {
+    public Client(@NotNull Client client) {
         this.id = client.getId();
         this.name = client.getName();
-        this.CPF = client.getCPF();
+        this.cpf = client.getCpf();
         this.income = client.getIncome();
         this.birthDate = client.getBirthDate();
-        this.Children = client.getChildren();
+        this.children = client.getChildren();
     }
 }

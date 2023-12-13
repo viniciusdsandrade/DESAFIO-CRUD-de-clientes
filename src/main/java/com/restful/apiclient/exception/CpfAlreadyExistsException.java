@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class CpfAlreadyExistsException extends RuntimeException {
     
-    @NotBlank(message = "O CPF não pode ser vazio.")
-    @CPF(message = "O CPF informado não é válido.")
-    private String cpf;
+    private final String cpf;
 
     /**
      * Construtor da exceção CpfAlreadyExistsException.
