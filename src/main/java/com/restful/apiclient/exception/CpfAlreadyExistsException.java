@@ -1,8 +1,6 @@
 package com.restful.apiclient.exception;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
-import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

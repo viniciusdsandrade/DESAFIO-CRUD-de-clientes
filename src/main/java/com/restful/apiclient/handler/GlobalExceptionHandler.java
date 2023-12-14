@@ -1,5 +1,7 @@
 package com.restful.apiclient.handler;
 
+import com.restful.apiclient.exception.CpfAlreadyExistsException;
+import com.restful.apiclient.exception.InvalidDataException;
 import com.restful.apiclient.exception.ResourceNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
@@ -44,6 +46,46 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 "PRODUCT_NOT_FOUND"
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Trata a exceção quando os dados fornecidos são inválidos.
+     *
+     * @param exception  Exceção do tipo InvalidDataException.
+     * @param webRequest Objeto WebRequest contendo informações da requisição.
+     * @return ResponseEntity contendo detalhes do erro e status HTTP 422 (Unprocessable Entity).
+     */
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<ErrorDetails> InvalidDataException(@NotNull InvalidDataException exception,
+                                                             @NotNull WebRequest webRequest) {
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "INVALID_DATA"
+        );
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Trata a exceção quando um CPF já existe.
+     *
+     * @param exception  Exceção do tipo CpfAlreadyExistsException.
+     * @param webRequest Objeto WebRequest contendo informações da requisição.
+     * @return ResponseEntity contendo detalhes do erro e status HTTP 400 (Bad Request).
+     */
+    @ExceptionHandler(CpfAlreadyExistsException.class)
+    public ResponseEntity<ErrorDetails> handleException(@NotNull CpfAlreadyExistsException exception,
+                                                        @NotNull WebRequest webRequest) {
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "CPF_ALREADY_EXISTS"
+        );
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
 

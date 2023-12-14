@@ -24,11 +24,9 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientDTO> save(@Valid @RequestBody ClientDTO dto) {
-
-        ClientDTO clientDTOSaved = clientService.save(dto);
-        URI location = createLocationUri(clientDTOSaved.getId());
-
-        return ResponseEntity.created(location).body(clientDTOSaved);
+        ClientDTO savedClient = clientService.save(dto);
+        URI location = createLocationUri(savedClient.getId());
+        return ResponseEntity.created(location).body(savedClient);
     }
 
     @GetMapping

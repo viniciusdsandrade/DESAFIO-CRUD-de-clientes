@@ -3,6 +3,7 @@ package com.restful.apiclient.service.impl;
 import com.restful.apiclient.dto.ClientDTO;
 import com.restful.apiclient.entity.Client;
 import com.restful.apiclient.exception.CpfAlreadyExistsException;
+import com.restful.apiclient.exception.InvalidDataException;
 import com.restful.apiclient.exception.ResourceNotFoundException;
 import com.restful.apiclient.mapper.ClientMapper;
 import com.restful.apiclient.repository.ClientRepository;
@@ -49,47 +50,54 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClientDTO save(ClientDTO clientDTO) {
-        
-        if (clientRepository.existsByCpf(clientDTO.getCpf())) 
-            throw new CpfAlreadyExistsException(clientDTO.getCpf());
-        
-        Client client = ClientMapper.mapToClient(clientDTO);
-        Client savedClient = clientRepository.save(client);
 
-        return ClientMapper.mapToClientDTO(savedClient);
+        if (clientRepository.existsByCpf(clientDTO.getCpf()))
+            throw new CpfAlreadyExistsException(clientDTO.getCpf());
+
+        try {
+            Client clientToSave = ClientMapper.mapToClient(clientDTO);
+            Client savedClient = clientRepository.save(clientToSave);
+
+            return ClientMapper.mapToClientDTO(savedClient);
+        } catch (InvalidDataException e) {
+            logger.error("Error: " + e.getMessage());
+            throw new InvalidDataException(e.getMessage());
+        }
     }
 
     @Override
     @Transactional
     public ClientDTO update(Long id, ClientDTO clientDTO) {
 
-        Client clientToUpdate = clientRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Client", "id", id));
+        if (!clientRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Client", "id", id);
+        }
 
-        clientToUpdate.setName(clientDTO.getName());
-        clientToUpdate.setCpf(clientDTO.getCpf());
-        clientToUpdate.setIncome(clientDTO.getIncome());
-        clientToUpdate.setBirthDate(clientDTO.getBirthDate());
-        clientToUpdate.setChildren(clientDTO.getChildren());
+        try {
+            Client clientToUpdate = ClientMapper.mapToClient(clientDTO);
 
-        Client updatedClient = clientRepository.save(clientToUpdate);
+            clientToUpdate.setId(id);
+            clientToUpdate.setCpf(clientDTO.getCpf());
+            clientToUpdate.setIncome(clientDTO.getIncome());
+            clientToUpdate.setBirthDate(clientDTO.getBirthDate());
+            clientToUpdate.setChildren(clientDTO.getChildren());
 
-        return ClientMapper.mapToClientDTO(updatedClient);
+            Client updatedClient = clientRepository.save(clientToUpdate);
+            return ClientMapper.mapToClientDTO(updatedClient);
+
+        } catch (InvalidDataException e) {
+            logger.error("Error: " + e.getMessage());
+            throw new InvalidDataException(e.getMessage());
+        }
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(Long id) {
-
-        try {
-            clientRepository.deleteById(id);
-            logger.info("Client deleted with success for ID: " + id);
-        } catch (EmptyResultDataAccessException e) {
+        if (!clientRepository.existsById(id)) {
             throw new ResourceNotFoundException("Client", "id", id);
-        } catch (Exception err) {
-            String message = String.format("Client not deleted for ID: %s.", id);
-            logger.error(message, err);
-            throw new DataIntegrityViolationException(message, err);
         }
+
+        clientRepository.deleteById(id);
     }
 }
