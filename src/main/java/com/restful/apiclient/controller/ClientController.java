@@ -3,6 +3,7 @@ package com.restful.apiclient.controller;
 import com.restful.apiclient.dto.ClientDTO;
 import com.restful.apiclient.service.ClientService;
 import jakarta.validation.Valid;
+import org.jetbrains.annotations.Contract;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class ClientController {
 
     private final ClientService clientService;
 
+    @Contract(pure = true)
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }

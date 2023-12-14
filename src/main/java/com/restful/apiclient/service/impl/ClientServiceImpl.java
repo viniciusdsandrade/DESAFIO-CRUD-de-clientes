@@ -8,6 +8,7 @@ import com.restful.apiclient.exception.ResourceNotFoundException;
 import com.restful.apiclient.mapper.ClientMapper;
 import com.restful.apiclient.repository.ClientRepository;
 import com.restful.apiclient.service.ClientService;
+import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +27,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
 
+    @Contract(pure = true)
     public ClientServiceImpl(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
@@ -97,7 +99,6 @@ public class ClientServiceImpl implements ClientService {
         if (!clientRepository.existsById(id)) {
             throw new ResourceNotFoundException("Client", "id", id);
         }
-
         clientRepository.deleteById(id);
     }
 }

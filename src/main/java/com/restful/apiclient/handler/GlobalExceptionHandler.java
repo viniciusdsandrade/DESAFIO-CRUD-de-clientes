@@ -43,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 LocalDateTime.now(),
                 exception.getMessage(),
                 webRequest.getDescription(false),
-                "PRODUCT_NOT_FOUND"
+                "CLIENT_NOT_FOUND"
         );
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      *
      * @param exception  Exceção do tipo CpfAlreadyExistsException.
      * @param webRequest Objeto WebRequest contendo informações da requisição.
-     * @return ResponseEntity contendo detalhes do erro e status HTTP 400 (Bad Request).
+     * @return ResponseEntity contendo detalhes do erro e status HTTP 422 (UNPROCESSABLE_ENTITY).
      */
     @ExceptionHandler(CpfAlreadyExistsException.class)
     public ResponseEntity<ErrorDetails> handleException(@NotNull CpfAlreadyExistsException exception,
@@ -85,7 +85,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 webRequest.getDescription(false),
                 "CPF_ALREADY_EXISTS"
         );
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 
@@ -116,13 +116,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
      * @param headers Cabeçalhos HTTP da resposta.
      * @param status  Código de status HTTP.
      * @param request Objeto WebRequest contendo informações da requisição.
-     * @return ResponseEntity contendo detalhes dos erros de validação e status HTTP 400 (Bad Request).
+     * @return ResponseEntity contendo detalhes dos erros de validação e status HTTP 422 (UNPROCESSABLE_ENTITY).
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NotNull MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatusCode status,
-                                                                  WebRequest request) {
+                                                                  @NotNull HttpHeaders headers,
+                                                                  @NotNull HttpStatusCode status,
+                                                                  @NotNull WebRequest request) {
 
         Map<String, String> errors = new HashMap<>();
         List<ObjectError> errorList = ex.getBindingResult().getAllErrors();
@@ -133,6 +133,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

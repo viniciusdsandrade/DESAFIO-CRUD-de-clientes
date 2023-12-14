@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * que resultará em uma resposta HTTP 400 (Bad Request) quando lançada.
  */
 @Getter
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
 public class CpfAlreadyExistsException extends RuntimeException {
     
     private final String cpf;

@@ -15,11 +15,11 @@ public interface ClientService {
     4 - Atualizar recurso
     5 - Deletar recurso
     */
-    
-    ClientDTO findProductById(Long id);
 
     @Transactional(readOnly = true)
     List<ClientDTO> findAll(Pageable pageable);
+
+    ClientDTO findProductById(Long id);
 
     @Transactional(readOnly = true)
     ClientDTO save(ClientDTO clientDTO);
