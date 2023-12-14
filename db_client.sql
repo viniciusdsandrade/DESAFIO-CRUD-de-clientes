@@ -4,14 +4,14 @@ USE db_client;
 
 CREATE TABLE IF NOT EXISTS tb_client
 (
-	id        BIGINT UNSIGNED AUTO_INCREMENT,
-	client_name VARCHAR(255)     NOT NULL,
-	client_cpf  VARCHAR(14)      NOT NULL,
-	client_income DECIMAL(10,2)  NOT NULL,
-	client_birth_date DATE       NOT NULL,
-	client_children INT          NOT NULL,
+    id                BIGINT UNSIGNED AUTO_INCREMENT,
+    client_name       VARCHAR(255)   NOT NULL,
+    client_cpf        VARCHAR(14)    NOT NULL,
+    client_income     DECIMAL(10, 2) NOT NULL,
+    client_birth_date DATE           NOT NULL,
+    client_children   INT            NOT NULL,
 
-	PRIMARY KEY (id)
+    PRIMARY KEY (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
